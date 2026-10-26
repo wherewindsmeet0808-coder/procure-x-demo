@@ -8,4 +8,4 @@ WORKDIR /app/frontend
 RUN pnpm install && pnpm run build && mkdir -p /app/frontend_dist && cp -r dist/* /app/frontend_dist/
 WORKDIR /app
 EXPOSE 8000
-CMD ["python3","-m","uvicorn","app.main:app","--host","0.0.0.0","--port","8000"]
+CMD ["python3","-m","uvicorn","backend.app.main:app","--host","0.0.0.0","--port","8000"]
