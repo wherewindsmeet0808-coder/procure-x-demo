@@ -1,37 +1,11 @@
-# Render-friendly Dockerfile for Procure-X demo
-# -------------------------------------------------
-# Base image – lightweight Python
 FROM python:3.11-slim
-
-# Install Node.js 20 and pnpm (required for Vite frontend)
-RUN apt-get update && \
-    apt-get install -y curl gnupg && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g pnpm && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+RUN apt-get update && apt-get install -y curl gnupg && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs && npm install -g pnpm && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-
-# Install backend Python dependencies
 COPY backend/requirements.txt ./backend/
 RUN pip install --no-cache-dir -r backend/requirements.txt
-
-# Copy the rest of the repository (including frontend source)
 COPY . .
-
-# Build the frontend (Vite) and copy built assets to frontend_dist
 WORKDIR /app/frontend
-RUN pnpm install && pnpm run build && \
-    mkdir -p /app/frontend_dist && \
-    cp -r dist/* /app/frontend_dist/
-
-# Return to app root
+RUN pnpm install && pnpm run build && mkdir -p /app/frontend_dist && cp -r dist/* /app/frontend_dist/
 WORKDIR /app
-
-# Expose port expected by Render
 EXPOSE 8000
-
-# Start FastAPI with uvicorn
 CMD ["python3","-m","uvicorn","app.main:app","--host","0.0.0.0","--port","8000"]
