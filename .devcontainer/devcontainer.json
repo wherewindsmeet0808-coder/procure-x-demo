@@ -1,0 +1,15 @@
+{
+  "name": "PROCURE‑X DevContainer",
+  "dockerFile": "Dockerfile",
+  "postCreateCommand": "npm install -g pnpm && pnpm install && cd frontend && pnpm install",
+  "postStartCommand": "uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 & cd frontend && pnpm dev --host 0.0.0.0 --port 5173",
+  "forwardPorts": [8000, 5173],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}
